@@ -62,6 +62,7 @@ public:
     }
     void put(int key, int value)
     {
+         if (capacity == 0) return;
         //case 1: if key already exists
         if(mp.count(key))
         {
@@ -75,14 +76,25 @@ public:
         {
             if(mp.size() == capacity)
             {
-                int deleteKey = tail->prev->key;
-                deleteNode(tail->prev);
-                mp.erase(deleteKey);
+                Node* node = tail->prev;
+                deleteNode(node);
+                mp.erase(node->key);
+                delete(node);
             }
 
             Node* temp = new Node(key,value);
             addNode(temp);
             mp[key] = temp;
+        }
+    }
+    ~LRUCache()
+    {
+        Node* curr = head;
+        while(curr!=nullptr)
+        {
+            Node* temp = curr->next;
+            delete(curr);
+            curr = temp;
         }
     }
 };
